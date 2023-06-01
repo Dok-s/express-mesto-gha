@@ -20,8 +20,8 @@ const createCard = (req, res, next) => {
       if (err.name === 'ValidationError') {
         return next(
           new InaccurateData(
-            'Переданы некорректные данные при создании карточки'
-          )
+            'Переданы некорректные данные при создании карточки',
+          ),
         );
       }
       return next(err);
@@ -54,7 +54,7 @@ const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .orFail(() => {
       throw new NotFound('Карточка с указанным _id не найдена');
@@ -72,7 +72,7 @@ const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true }
+    { new: true },
   )
     .orFail(() => {
       throw new NotFound('Карточка с указанным _id не найдена');
