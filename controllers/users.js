@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const { STATUS_CODES } = require('../utils/constants');
 
 const {
   ERROR_INACCURATE_DATA,
@@ -42,7 +43,7 @@ const getUserById = (req, res) => {
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.status(201).send({ data: user }))
+    .then((user) => res.status(STATUS_CODES.CREATED).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_INACCURATE_DATA).send({
@@ -59,8 +60,8 @@ const createUser = (req, res) => {
 const updateUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, avatar ? { avatar } : { name, about }, {
-    new: true, // обработчик then получит на вход обновлённую запись
-    runValidators: true, // данные будут валидированы перед изменением
+    new: true,
+    runValidators: true,
   })
     .orFail(() => {
       throw new Error('NotFound');
